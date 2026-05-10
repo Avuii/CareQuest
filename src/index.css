@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* EFEKTY DLA PRZYCISKÓW */
+.menu-button:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  transform: translateX(5px);
+}
+
+.primary-btn {
+  padding: 15px 35px;
+  border-radius: 18px;
+  border: none;
+  background-color: white;
+  color: #1D4ED8;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s all;
+}
+
+.primary-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background-color: #f8fafc;
+}
+
+.topic-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+.search-input:focus {
+  border-color: #3B82F6 !important;
+  width: 350px !important;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
