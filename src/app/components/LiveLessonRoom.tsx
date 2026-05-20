@@ -347,9 +347,16 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
             LIVE
           </span>
 
-          <span style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '14px', fontWeight: '700', flexShrink: 0 }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }} />
-            00:24:36
+          <span style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '14px', fontWeight: '700', flexShrink: 0, fontFamily: 'monospace',color: timeLeft < 300 ? '#EF4444' : 'white' }}>
+            <span 
+            className="timer-pulse"
+            style={{ 
+              width: '8px', 
+              height: '8px', 
+              borderRadius: '50%', 
+              background: '#EF4444' 
+            }} />
+            {formatTime(timeLeft)} {/* Zostaw tylko to! */}
           </span>
         </div>
 
@@ -1339,7 +1346,8 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
         .live-badge { animation: livePulse 1.6s ease-in-out infinite; }
         .reaction-button { transition: transform 0.18s ease; }
         .reaction-button:hover { transform: translateY(-3px) scale(1.1); }
-
+        .timer-pulse {animation: timerDotPulse 1.5s ease-in-out infinite;}
+        @keyframes timerDotPulse {0%, 100% { opacity: 1; transform: scale(1); }50% { opacity: 0.4; transform: scale(0.8); }}
         @keyframes groupIn { to { opacity: 1; transform: translateX(0) scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes chatIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }

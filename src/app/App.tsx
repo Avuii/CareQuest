@@ -17,7 +17,12 @@ import {
   saveMockUser,
   type EnergyLevel
 } from './mock/mockDatabase';
-
+const themeMapping: Record<string, { background: string }> = {
+  'default': { background: 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)' },
+  'ocean-theme': { background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)' },
+  'sunset-theme': { background: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)' },
+  'nature-theme': { background: 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)' },
+};
 type AgeGroup = 'young' | 'teen' | 'advanced';
 
 export default function App() {
@@ -25,6 +30,8 @@ export default function App() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null);
   const [energyLevel, setEnergyLevel] = useState<EnergyLevel | null>(null);
+  const userData = username ? getMockUser(username, 'child') : null;
+  const currentTheme = userData?.equippedTheme || 'default';
   const [activeTab, setActiveTab] = useState('home');
 
   const handleLogin = (name: string, role: string) => {
@@ -212,7 +219,8 @@ export default function App() {
       display: 'flex',
       height: '100vh',
       fontFamily: '"Plus Jakarta Sans", sans-serif',
-      background: 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)'
+      background: themeMapping[currentTheme]?.background || themeMapping.default.background,
+      transition: 'background 0.5s ease'
     }}>
       {userRole === 'child' && (
         <Sidebar
