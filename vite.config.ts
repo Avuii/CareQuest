@@ -16,7 +16,7 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
-  base: '/BIP-Project/',
+  base: '/CareQuest/',
 
   plugins: [
     figmaAssetResolver(),
