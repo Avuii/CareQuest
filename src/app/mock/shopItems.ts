@@ -5,15 +5,12 @@ export interface ShopItem {
   type: ShopItemType;
   title: string;
   description: string;
-  icon: string; // 这里可以使用 Emoji，或者对应你项目的图片路径/组件
+  icon: string; 
   price: number;
   isFree?: boolean;
 }
 
 export const SHOP_ITEMS: ShopItem[] = [
-  // ==========================================
-  // 1. AVATARS (10个精心挑选的青少年定制头像)
-  // ==========================================
   {
     id: 'avatar-sunny',
     type: 'avatar',
@@ -97,9 +94,6 @@ export const SHOP_ITEMS: ShopItem[] = [
     price: 200
   },
 
-  // ==========================================
-  // 2. FRAMES (预留并对齐截图中的头像框数据)
-  // ==========================================
   {
     id: 'none',
     type: 'frame',
@@ -135,7 +129,6 @@ export const SHOP_ITEMS: ShopItem[] = [
   }
 ];
 
-// 辅助过滤函数，方便前端按 Tab 切换渲染
 export function getShopItemsByType(type: ShopItemType) {
   return SHOP_ITEMS.filter(item => item.type === type);
 }
