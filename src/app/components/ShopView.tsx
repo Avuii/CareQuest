@@ -42,7 +42,6 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
   const equippedBuddy = userData?.equippedBuddy ?? 'blue-buddy';
   const equippedTheme = userData?.equippedTheme ?? 'default';
   const equippedFrame = userData?.equippedFrame ?? 'none';
-
   const shopItems: ShopItem[] = [
     {
       id: 'avatar-sunny',
@@ -278,7 +277,6 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
   const currentBuddy = shopItems.find((item) => item.id === equippedBuddy);
   const currentTheme = shopItems.find((item) => item.id === equippedTheme);
   const currentFrame = shopItems.find((item) => item.id === equippedFrame);
-
   return (
     <div
       style={{
@@ -433,7 +431,8 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                 justifyContent: 'center',
                 fontSize: '38px',
                 flexShrink: 0,
-                boxShadow: '0 8px 20px rgba(15, 23, 42, 0.12)'
+                boxShadow: '0 8px 20px rgba(15, 23, 42, 0.12)',
+                transition: 'all 0.3s ease'
               }}
             >
               {currentAvatar?.emoji ?? '😊'}
