@@ -129,7 +129,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               {roles.map((role) => (
                 <div
                   key={role.id}
-                  onClick={() => handleRoleSelect(role.id)}
+                  onClick={() => handleRoleSelect(role.id)} //baka
                   style={{
                     background: role.gradient,
                     borderRadius: '20px',
