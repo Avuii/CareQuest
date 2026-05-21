@@ -51,6 +51,17 @@ const theme = {
     'linear-gradient(135deg, rgba(238,247,255,0.96) 0%, rgba(233,252,255,0.92) 52%, rgba(236,255,248,0.9) 100%)'
 };
 
+const sidebarScrollbarStyles = `
+  [data-carequest-sidebar-nav] {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  [data-carequest-sidebar-nav]::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const navTones = {
   home: {
     accent: '#3B82F6',
@@ -124,14 +135,14 @@ function MenuBtn({
         background: active ? tone.gradient : 'transparent',
         color: active ? 'white' : theme.muted,
         borderColor: active ? tone.borderStrong : 'transparent',
-        boxShadow: active ? `0 13px 26px ${tone.shadow}` : 'none'
+        boxShadow: active ? `0 12px 24px ${tone.shadow}` : 'none'
       }}
       onMouseEnter={(e) => {
         if (!active) {
           e.currentTarget.style.background = tone.soft;
           e.currentTarget.style.color = theme.text;
-          e.currentTarget.style.transform = 'translateX(4px)';
-          e.currentTarget.style.boxShadow = `0 12px 24px ${tone.shadow}`;
+          e.currentTarget.style.transform = 'translateX(3px)';
+          e.currentTarget.style.boxShadow = `0 10px 20px ${tone.shadow}`;
           e.currentTarget.style.borderColor = tone.border;
         }
       }}
@@ -149,7 +160,7 @@ function MenuBtn({
         {icon}
       </span>
 
-      <span style={{ flex: 1, textAlign: 'left' }}>
+      <span style={menuLabelStyle}>
         {label}
       </span>
 
@@ -193,6 +204,8 @@ export function Sidebar({
 
   return (
     <aside style={sidebarStyle}>
+      <style>{sidebarScrollbarStyles}</style>
+
       <div style={topGlowStyle} />
       <div style={bottomGlowStyle} />
 
@@ -218,11 +231,11 @@ export function Sidebar({
         </p>
       </div>
 
-      <nav style={navStyle}>
+      <nav data-carequest-sidebar-nav="true" style={navStyle}>
         <MenuBtn
           active={activeTab === 'home'}
           onClick={() => onTabChange('home')}
-          icon={<Home size={20} />}
+          icon={<Home size={19} />}
           label="Home"
           tone={navTones.home}
         />
@@ -230,7 +243,7 @@ export function Sidebar({
         <MenuBtn
           active={activeTab === 'schedule'}
           onClick={() => onTabChange('schedule')}
-          icon={<CalendarDays size={20} />}
+          icon={<CalendarDays size={19} />}
           label="Schedule"
           tone={navTones.schedule}
         />
@@ -238,7 +251,7 @@ export function Sidebar({
         <MenuBtn
           active={activeTab === 'activities'}
           onClick={() => onTabChange('activities')}
-          icon={<Sparkles size={20} />}
+          icon={<Sparkles size={19} />}
           label="Activities"
           tone={navTones.activities}
         />
@@ -246,7 +259,7 @@ export function Sidebar({
         <MenuBtn
           active={activeTab === 'shop'}
           onClick={() => onTabChange('shop')}
-          icon={<ShoppingBag size={20} />}
+          icon={<ShoppingBag size={19} />}
           label="Shop"
           tone={navTones.shop}
         />
@@ -254,7 +267,7 @@ export function Sidebar({
         <MenuBtn
           active={activeTab === 'achievements'}
           onClick={() => onTabChange('achievements')}
-          icon={<Trophy size={20} />}
+          icon={<Trophy size={19} />}
           label="Achievements"
           tone={navTones.achievements}
         />
@@ -262,7 +275,7 @@ export function Sidebar({
         <MenuBtn
           active={activeTab === 'messages'}
           onClick={() => onTabChange('messages')}
-          icon={<MessageSquare size={20} />}
+          icon={<MessageSquare size={19} />}
           label="Messages"
           badge="3"
           tone={navTones.messages}
@@ -278,13 +291,13 @@ export function Sidebar({
             : 'rgba(245, 196, 81, 0.48)'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-3px)';
-          e.currentTarget.style.boxShadow = '0 16px 30px rgba(245, 196, 81, 0.24)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 14px 26px rgba(245, 196, 81, 0.22)';
           e.currentTarget.style.borderColor = 'rgba(245, 196, 81, 0.95)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 12px 24px rgba(16, 42, 86, 0.08)';
+          e.currentTarget.style.boxShadow = '0 10px 22px rgba(16, 42, 86, 0.08)';
           e.currentTarget.style.borderColor = activeTab === 'shop'
             ? 'rgba(245, 196, 81, 0.95)'
             : 'rgba(245, 196, 81, 0.48)';
@@ -313,7 +326,7 @@ export function Sidebar({
           e.currentTarget.style.color = 'white';
           e.currentTarget.style.borderColor = '#EF4444';
           e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 14px 26px rgba(239, 68, 68, 0.18)';
+          e.currentTarget.style.boxShadow = '0 12px 22px rgba(239, 68, 68, 0.18)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = 'rgba(254, 242, 242, 0.9)';
@@ -335,7 +348,7 @@ const sidebarStyle: CSSProperties = {
   background: theme.sidebarGlass,
   backdropFilter: 'blur(24px)',
   WebkitBackdropFilter: 'blur(24px)',
-  padding: '22px 16px',
+  padding: '18px 16px',
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
@@ -343,7 +356,8 @@ const sidebarStyle: CSSProperties = {
   borderRight: '1px solid rgba(221, 234, 245, 0.78)',
   overflow: 'hidden',
   position: 'relative',
-  fontFamily: '"Plus Jakarta Sans", sans-serif'
+  fontFamily: '"Plus Jakarta Sans", sans-serif',
+  boxSizing: 'border-box'
 };
 
 const topGlowStyle: CSSProperties = {
@@ -376,47 +390,51 @@ const logoWrapperStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '86px',
+  height: '70px',
   marginBottom: '8px',
   padding: 0,
   overflow: 'hidden',
   position: 'relative',
-  zIndex: 1
+  zIndex: 1,
+  flexShrink: 0
 };
 
 const logoStyle: CSSProperties = {
-  width: '235px',
+  width: '220px',
   maxWidth: '100%',
   height: 'auto',
   objectFit: 'contain',
   display: 'block',
-  transform: 'translateY(-6px)'
+  transform: 'translateY(-4px)'
 };
 
 const userCardStyle: CSSProperties = {
   background: theme.softCareQuest,
-  padding: '16px',
+  padding: '14px',
   borderRadius: '22px',
-  marginBottom: '22px',
+  marginBottom: '18px',
   textAlign: 'center',
   border: '1px solid rgba(191, 223, 255, 0.88)',
   boxShadow: '0 14px 28px rgba(16, 42, 86, 0.08)',
   position: 'relative',
-  zIndex: 1
+  zIndex: 1,
+  flexShrink: 0,
+  boxSizing: 'border-box'
 };
 
 const avatarStyle = (border: string, background: string): CSSProperties => ({
-  width: '62px',
-  height: '62px',
+  width: '58px',
+  height: '58px',
   background,
   borderRadius: '50%',
   border,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  margin: '0 auto 12px',
-  fontSize: '30px',
-  boxShadow: '0 10px 22px rgba(59, 130, 246, 0.16)'
+  margin: '0 auto 10px',
+  fontSize: '28px',
+  boxShadow: '0 10px 22px rgba(59, 130, 246, 0.16)',
+  boxSizing: 'border-box'
 });
 
 const welcomeTextStyle: CSSProperties = {
@@ -429,35 +447,41 @@ const welcomeTextStyle: CSSProperties = {
 const usernameStyle: CSSProperties = {
   margin: 0,
   fontWeight: '900',
-  fontSize: '17px',
+  fontSize: '16px',
   color: theme.text
 };
 
 const navStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  gap: '7px',
+  gap: '6px',
   flex: 1,
+  minHeight: 0,
   overflowY: 'auto',
-  paddingRight: '2px',
+  overflowX: 'hidden',
+  paddingRight: 0,
   position: 'relative',
-  zIndex: 1
+  zIndex: 1,
+  boxSizing: 'border-box'
 };
 
 const menuButtonStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-  padding: '12px 13px',
-  borderRadius: '17px',
+  gap: '11px',
+  padding: '10px 12px',
+  borderRadius: '16px',
   border: '1px solid transparent',
   width: '100%',
+  minHeight: '50px',
   cursor: 'pointer',
   fontWeight: '850',
   fontSize: '15px',
   transition: 'all 0.25s ease',
   position: 'relative',
-  fontFamily: 'inherit'
+  fontFamily: 'inherit',
+  boxSizing: 'border-box',
+  flexShrink: 0
 };
 
 const menuIconStyle = (tone: NavTone, active: boolean): CSSProperties => ({
@@ -471,12 +495,22 @@ const menuIconStyle = (tone: NavTone, active: boolean): CSSProperties => ({
   color: active ? 'white' : tone.accent,
   boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.26)' : 'none',
   transition: 'all 0.25s ease',
-  flexShrink: 0
+  flexShrink: 0,
+  boxSizing: 'border-box'
 });
 
+const menuLabelStyle: CSSProperties = {
+  flex: 1,
+  textAlign: 'left',
+  minWidth: 0,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+};
+
 const badgeStyle: CSSProperties = {
-  minWidth: '23px',
-  height: '23px',
+  minWidth: '22px',
+  height: '22px',
   borderRadius: '999px',
   background: 'linear-gradient(135deg, #FF6B9D 0%, #8B5CF6 100%)',
   color: 'white',
@@ -485,43 +519,49 @@ const badgeStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  boxShadow: '0 8px 16px rgba(255, 107, 157, 0.24)'
+  boxShadow: '0 8px 16px rgba(255, 107, 157, 0.24)',
+  flexShrink: 0
 };
 
 const starsCardStyle: CSSProperties = {
   background:
     'linear-gradient(135deg, rgba(255, 251, 235, 0.98) 0%, rgba(254, 243, 199, 0.88) 46%, rgba(255, 247, 237, 0.9) 100%)',
-  padding: '17px',
-  borderRadius: '22px',
-  marginTop: '16px',
-  marginBottom: '16px',
+  padding: '14px',
+  borderRadius: '20px',
+  marginTop: '14px',
+  marginBottom: '14px',
   border: '1px solid rgba(245, 196, 81, 0.48)',
   cursor: 'pointer',
   textAlign: 'left',
   transition: 'all 0.25s ease',
-  boxShadow: '0 12px 24px rgba(16, 42, 86, 0.08)',
+  boxShadow: '0 10px 22px rgba(16, 42, 86, 0.08)',
   display: 'flex',
   alignItems: 'center',
   gap: '12px',
   position: 'relative',
   zIndex: 1,
   fontFamily: 'inherit',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  flexShrink: 0,
+  boxSizing: 'border-box',
+  width: '100%'
 };
 
 const starIconStyle: CSSProperties = {
-  width: '52px',
-  height: '52px',
-  borderRadius: '17px',
+  width: '48px',
+  height: '48px',
+  borderRadius: '16px',
   background:
     'linear-gradient(135deg, rgba(255,255,255,0.88) 0%, rgba(254, 243, 199, 0.72) 100%)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '29px',
+  fontSize: '27px',
   boxShadow:
     '0 10px 20px rgba(245, 196, 81, 0.22), inset 0 1px 0 rgba(255,255,255,0.9)',
-  border: '1px solid rgba(245, 196, 81, 0.35)'
+  border: '1px solid rgba(245, 196, 81, 0.35)',
+  flexShrink: 0,
+  boxSizing: 'border-box'
 };
 
 const starLabelStyle: CSSProperties = {
@@ -536,7 +576,7 @@ const starLabelStyle: CSSProperties = {
 const starCountStyle: CSSProperties = {
   margin: 0,
   fontWeight: '900',
-  fontSize: '23px',
+  fontSize: '22px',
   color: '#D97706'
 };
 
@@ -545,7 +585,8 @@ const logoutButtonStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   gap: '10px',
-  padding: '14px',
+  padding: '12px',
+  minHeight: '52px',
   background: 'rgba(254, 242, 242, 0.9)',
   border: '2px solid #FEE2E2',
   borderRadius: '15px',
@@ -556,5 +597,8 @@ const logoutButtonStyle: CSSProperties = {
   transition: 'all 0.25s ease',
   position: 'relative',
   zIndex: 1,
-  fontFamily: 'inherit'
+  fontFamily: 'inherit',
+  flexShrink: 0,
+  boxSizing: 'border-box',
+  width: '100%'
 };
