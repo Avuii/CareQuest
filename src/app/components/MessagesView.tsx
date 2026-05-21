@@ -18,6 +18,14 @@ export function MessagesView({ ageGroup, username }: MessagesViewProps) {
   const [selectedChatIndex, setSelectedChatIndex] = useState(0);
   const [message, setMessage] = useState('');
 
+  const getChatList = () => {
+    if (ageGroup === 'young') {
+      return [
+        { id: 0, name: 'Mentor Sarah', msg: 'Great job during the kindness logo activity! 🎨', online: true },
+        { id: 1, name: 'Emma', msg: 'Can you share your drawing idea?', online: false },
+        { id: 2, name: 'CareQuest Support', msg: 'You earned new Stars! ⭐', online: true }
+      ];
+    }
   // 1. Pobieranie danych Buddy'ego z bezpiecznym rzutowaniem
   const userData = getMockUser(username, 'child') as any;
   const activeBuddy = userData?.equippedBuddy || 'default';

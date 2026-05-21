@@ -1,4 +1,6 @@
+import { useEffect, useRef } from 'react';
 import { Star, ArrowLeft, ChevronRight } from 'lucide-react';
+import { addCareCoins } from '../mock/mockDatabase';
 
 interface SessionCompletedProps {
   username: string;
@@ -7,7 +9,18 @@ interface SessionCompletedProps {
 }
 
 export function SessionCompleted({ username, ageGroup, onBack }: SessionCompletedProps) {
+  const rewardAddedRef = useRef(false);
+  const rewardStars = 20;
   const isYoung = ageGroup === 'young';
+
+  useEffect(() => {
+    if (rewardAddedRef.current) {
+      return;
+    }
+
+    rewardAddedRef.current = true;
+    addCareCoins(username, rewardStars);
+  }, [username]);
 
   const lessonTitle = isYoung
     ? 'Design a Logo for a Kindness Project'
@@ -256,7 +269,7 @@ export function SessionCompleted({ username, ageGroup, onBack }: SessionComplete
           >
             <Star size={16} fill="#F59E0B" color="#F59E0B" />
             <span style={{ fontWeight: 'bold', color: '#92400E' }}>
-              +20 Stars
+              {`+${rewardStars} Stars`}
             </span>
           </div>
         </div>

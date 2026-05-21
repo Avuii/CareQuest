@@ -1,12 +1,26 @@
+import { useEffect, useRef } from 'react';
 import { Star, Heart, Sparkles, ArrowRight } from 'lucide-react';
+import { addCareCoins } from '../mock/mockDatabase';
 
 interface CompletionFeedbackProps {
   activity: string;
   ageGroup: string;
+  username?: string;
   onContinue: () => void;
 }
 
-export function CompletionFeedback({ activity, ageGroup, onContinue }: CompletionFeedbackProps) {
+export function CompletionFeedback({ activity, ageGroup, username, onContinue }: CompletionFeedbackProps) {
+  const rewardAddedRef = useRef(false);
+  const rewardStars = 25;
+
+  useEffect(() => {
+    if (!username || rewardAddedRef.current) {
+      return;
+    }
+
+    rewardAddedRef.current = true;
+    addCareCoins(username, rewardStars);
+  }, [username]);
   const badges = ageGroup === 'young' ? [
     { name: 'Kindness Champion', icon: '💚', description: 'Completed a kindness activity' },
     { name: 'Creative Thinker', icon: '🎨', description: 'Showed amazing creativity!' }
@@ -102,8 +116,8 @@ export function CompletionFeedback({ activity, ageGroup, onContinue }: Completio
             position: 'relative'
           }}>
             <div style={{ fontSize: '48px', marginBottom: '8px' }}>⭐</div>
-            <div style={{ fontSize: '32px', fontWeight: '800', color: '#F59E0B', marginBottom: '4px' }}>+25</div>
-            <div style={{ fontSize: '14px', color: '#64748B', fontWeight: '600' }}>Care Coins</div>
+            <div style={{ fontSize: '32px', fontWeight: '800', color: '#F59E0B', marginBottom: '4px' }}>{`+${rewardStars}`}</div>
+            <div style={{ fontSize: '14px', color: '#64748B', fontWeight: '600' }}>Stars</div>
           </div>
 
           <div style={{

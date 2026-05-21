@@ -30,7 +30,7 @@ interface MockDatabase {
 
 const STORAGE_KEY = 'carequest_mock_database_v1';
 
-const DEFAULT_CARE_COINS = 240;
+const DEFAULT_CARE_COINS = 900;
 const DEFAULT_AVATAR = 'avatar-sunny';
 const DEFAULT_BUDDY = 'blue-buddy';
 const DEFAULT_THEME = 'default';
@@ -42,6 +42,24 @@ const DEFAULT_OWNED_ITEMS = [
   DEFAULT_THEME,
   DEFAULT_FRAME
 ];
+
+function normalizeShopItemId(id?: string) {
+  if (!id) return id;
+
+  const legacyMap: Record<string, string> = {
+    'rainbow-frame': 'frame-rainbow',
+    'gold-frame': 'frame-gold',
+    'heart-frame': 'frame-heart'
+  };
+
+  return legacyMap[id] ?? id;
+}
+
+function normalizeOwnedItems(items?: string[]) {
+  return Array.from(
+    new Set([...(items ?? DEFAULT_OWNED_ITEMS), ...DEFAULT_OWNED_ITEMS].map((item) => normalizeShopItemId(item) ?? item))
+  );
+}
 
 function getUserKey(username: string, role: string) {
   return `${role}:${username.trim().toLowerCase()}`;
@@ -57,11 +75,11 @@ function applyUserDefaults(user: MockUserData): MockUserData {
   return {
     ...user,
     careCoins: user.careCoins ?? DEFAULT_CARE_COINS,
-    ownedItems: user.ownedItems ?? DEFAULT_OWNED_ITEMS,
-    equippedAvatar: user.equippedAvatar ?? DEFAULT_AVATAR,
-    equippedBuddy: user.equippedBuddy ?? DEFAULT_BUDDY,
-    equippedTheme: user.equippedTheme ?? DEFAULT_THEME,
-    equippedFrame: user.equippedFrame ?? DEFAULT_FRAME,
+    ownedItems: normalizeOwnedItems(user.ownedItems),
+    equippedAvatar: normalizeShopItemId(user.equippedAvatar) ?? DEFAULT_AVATAR,
+    equippedBuddy: normalizeShopItemId(user.equippedBuddy) ?? DEFAULT_BUDDY,
+    equippedTheme: normalizeShopItemId(user.equippedTheme) ?? DEFAULT_THEME,
+    equippedFrame: normalizeShopItemId(user.equippedFrame) ?? DEFAULT_FRAME,
     enrolledSessionIds: user.enrolledSessionIds ?? []
   };
 }
@@ -110,6 +128,16 @@ export function getMockUser(username: string, role: string): MockUserData | null
   return applyUserDefaults(user);
 }
 
+export function getLatestMockUser(role = 'child'): MockUserData | null {
+  const database = readMockDatabase();
+  const users = Object.values(database.users)
+    .filter((user) => user.role === role)
+    .map(applyUserDefaults)
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+  return users[0] ?? null;
+}
+
 export function saveMockUser(
   username: string,
   role: string,
@@ -121,9 +149,18 @@ export function saveMockUser(
 
   const existingUser = database.users[key];
 
+  const normalizedData: Partial<MockUserData> = {
+    ...data,
+    ownedItems: data.ownedItems ? normalizeOwnedItems(data.ownedItems) : undefined,
+    equippedAvatar: normalizeShopItemId(data.equippedAvatar),
+    equippedBuddy: normalizeShopItemId(data.equippedBuddy),
+    equippedTheme: normalizeShopItemId(data.equippedTheme),
+    equippedFrame: normalizeShopItemId(data.equippedFrame)
+  };
+
   const updatedUser: MockUserData = applyUserDefaults({
     ...(existingUser ?? {}),
-    ...data,
+    ...normalizedData,
     username,
     role,
     createdAt: existingUser?.createdAt ?? now,
@@ -154,12 +191,13 @@ export function buyShopItem(
   itemId: string,
   price: number
 ): MockUserData {
+  const normalizedItemId = normalizeShopItemId(itemId) ?? itemId;
   const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
 
   const currentCoins = user.careCoins ?? DEFAULT_CARE_COINS;
-  const ownedItems = user.ownedItems ?? DEFAULT_OWNED_ITEMS;
+  const ownedItems = normalizeOwnedItems(user.ownedItems);
 
-  if (ownedItems.includes(itemId)) {
+  if (ownedItems.includes(normalizedItemId)) {
     return user;
   }
 
@@ -169,7 +207,7 @@ export function buyShopItem(
 
   return saveMockUser(username, 'child', {
     careCoins: currentCoins - price,
-    ownedItems: [...ownedItems, itemId]
+    ownedItems: [...ownedItems, normalizedItemId]
   });
 }
 
@@ -180,31 +218,32 @@ export function equipShopItem(
     type: ShopItemType;
   }
 ): MockUserData {
+  const normalizedItemId = normalizeShopItemId(item.id) ?? item.id;
   const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
-  const ownedItems = user.ownedItems ?? DEFAULT_OWNED_ITEMS;
+  const ownedItems = normalizeOwnedItems(user.ownedItems);
 
-  const isDefaultItem = DEFAULT_OWNED_ITEMS.includes(item.id);
+  const isDefaultItem = DEFAULT_OWNED_ITEMS.includes(normalizedItemId);
 
-  if (!ownedItems.includes(item.id) && !isDefaultItem) {
+  if (!ownedItems.includes(normalizedItemId) && !isDefaultItem) {
     return user;
   }
 
   const updates: Partial<MockUserData> = {};
 
   if (item.type === 'avatar') {
-    updates.equippedAvatar = item.id;
+    updates.equippedAvatar = normalizedItemId;
   }
 
   if (item.type === 'buddy') {
-    updates.equippedBuddy = item.id;
+    updates.equippedBuddy = normalizedItemId;
   }
 
   if (item.type === 'theme') {
-    updates.equippedTheme = item.id;
+    updates.equippedTheme = normalizedItemId;
   }
 
   if (item.type === 'frame') {
-    updates.equippedFrame = item.id;
+    updates.equippedFrame = normalizedItemId;
   }
 
   return saveMockUser(username, 'child', updates);
