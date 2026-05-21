@@ -111,7 +111,7 @@ function TimelineColumn({
           {/* Current time line */}
           <div
             ref={nowRef}
-            style={{ position: 'absolute', top: `${nowMinutes / 60 * HOUR_HEIGHT}px`, left: 0, right: 0, height: '2px', background: '#EF4444', zIndex: 10, display: 'flex', alignItems: 'center' }}
+            style={{ position: 'absolute', top: `${nowMinutes / 60 * HOUR_HEIGHT + 20}px`, left: 0, right: 0, height: '2px', background: '#EF4444', zIndex: 10, display: 'flex', alignItems: 'center' }}
           >
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444', marginLeft: '-4px', flexShrink: 0 }} />
           </div>
@@ -263,7 +263,7 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
   const todayKey = getDateKey(new Date());
   const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
 
-  const enrolledSessionIds = userData?.enrolledSessionIds ?? [];
+  const enrolledSessionIds = userData?.enrolledSessionIds ?? ['live-kindness-logo', 'hospital-calm-1'];
   const calendarDays = getCalendarDays(calendarOffset);
   const activeSessions = sessions.filter((session) => getSessionStatus(session) === 'live');
 
