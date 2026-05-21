@@ -388,6 +388,7 @@ const logoWrapperStyle: CSSProperties = {
 
 const logoStyle: CSSProperties = {
   width: '220px',
+  marginTop: '4px',
   maxWidth: '100%',
   height: 'auto',
   objectFit: 'contain',
