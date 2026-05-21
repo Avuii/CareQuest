@@ -268,9 +268,9 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
   const activeSessions = sessions.filter((session) => getSessionStatus(session) === 'live');
 
   const myNextSession = sessions
-    .filter((session) => enrolledSessionIds.includes(session.id))
-    .filter((session) => getSessionStatus(session) !== 'finished')
-    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0];
+  .filter((session) => enrolledSessionIds.includes(session.id))
+  .filter((session) => getSessionStatus(session) === 'upcoming')
+  .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0];
 
   const sessionsForSelectedDay = sessions.filter((session) => {
     return getDateKey(session.startTime) === selectedDateKey;
