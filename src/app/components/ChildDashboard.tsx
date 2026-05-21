@@ -13,6 +13,7 @@ interface ChildDashboardProps {
 
 export function ChildDashboard({ username, ageGroup, onJoinSession, onBrowseActivities }: ChildDashboardProps) {
   const savedUser = getMockUser(username, 'child');
+  const stars = savedUser?.careCoins ?? 240;
 
   const [energyLevel, setEnergyLevel] = useState<string | null>(
     savedUser?.energyPopupCompleted ? savedUser.energyLevel ?? null : null
@@ -260,8 +261,8 @@ export function ChildDashboard({ username, ageGroup, onJoinSession, onBrowseActi
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭐</div>
-            <div style={{ fontSize: '28px', fontWeight: '800', color: '#F59E0B', marginBottom: '4px' }}>120</div>
-            <div style={{ fontSize: '13px', color: '#64748B', fontWeight: '600' }}>Care Coins</div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: '#F59E0B', marginBottom: '4px' }}>{stars}</div>
+            <div style={{ fontSize: '13px', color: '#64748B', fontWeight: '600' }}>Stars</div>
           </div>
 
           <div style={{

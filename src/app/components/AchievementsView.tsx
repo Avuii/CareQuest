@@ -1,10 +1,17 @@
 import { Star } from 'lucide-react';
+import { getLatestMockUser, getMockUser } from '../mock/mockDatabase';
 
 interface AchievementsViewProps {
   ageGroup: string;
+  username?: string;
 }
 
-export function AchievementsView({ ageGroup }: AchievementsViewProps) {
+export function AchievementsView({ ageGroup, username }: AchievementsViewProps) {
+  const userData = username
+    ? getMockUser(username, 'child')
+    : getLatestMockUser('child');
+
+  const stars = userData?.careCoins ?? 240;
   const categories = [
     {
       name: ageGroup === 'advanced' ? 'Creative Mastery' : 'Creative Explorer',
@@ -92,7 +99,7 @@ export function AchievementsView({ ageGroup }: AchievementsViewProps) {
           border: '2px solid #FED7AA'
         }}>
           <span style={{ fontSize: '14px', fontWeight: '700', color: '#92400E', display: 'block', marginBottom: '4px' }}>
-            Total Care Coins
+            Total Stars
           </span>
           <div style={{
             fontSize: '32px',
@@ -103,7 +110,7 @@ export function AchievementsView({ ageGroup }: AchievementsViewProps) {
             gap: '8px',
             justifyContent: 'center'
           }}>
-            <span>⭐</span> 120
+            <span>⭐</span> {stars}
           </div>
         </div>
       </div>
