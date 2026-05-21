@@ -30,7 +30,12 @@ interface ShopItem {
   emoji: string;
   color: string;
 }
-
+const themeMapping: Record<string, { main: string; background: string }> = {
+  'default': { main: '#0A2E6E', background: '#F8FAFC' },
+  'ocean-theme': { main: '#075985', background: '#F0F9FF' },
+  'sunset-theme': { main: '#9D174D', background: '#FFF7ED' },
+  'nature-theme': { main: '#065F46', background: '#F0FDF4' },
+};
 export function ShopView({ username, onThemeChange }: ShopViewProps) {
   const [userData, setUserData] = useState(() => getMockUser(username, 'child'));
   const [selectedCategory, setSelectedCategory] = useState<ShopItemType | 'all'>('all');
