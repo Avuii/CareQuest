@@ -9,6 +9,7 @@ import {
   CalendarDays
 } from 'lucide-react';
 import { getMockUser } from '../mock/mockDatabase';
+import { getAvatarVisual, getFrameVisual } from '../mock/shopItems';
 import careQuestFullLogo from '../assets/carequest-logo-full.png';
 
 interface SidebarProps {
@@ -185,22 +186,8 @@ export function Sidebar({
   const equippedAvatar = userData?.equippedAvatar ?? 'avatar-sunny';
   const equippedFrame = userData?.equippedFrame ?? 'none';
 
-  const avatarMap: Record<string, { emoji: string; background: string }> = {
-    'avatar-sunny': { emoji: '😊', background: '#EFF6FF' },
-    'avatar-artist': { emoji: '🎨', background: '#E9FCFF' },
-    'avatar-robot': { emoji: '🤖', background: '#F0FFFA' },
-    'avatar-space': { emoji: '🚀', background: '#EAF3FF' }
-  };
-
-  const getFrameStyle = () => {
-    if (equippedFrame === 'rainbow-frame') return '4px solid #3BE0F6';
-    if (equippedFrame === 'gold-frame') return '4px solid #F5C451';
-    if (equippedFrame === 'heart-frame') return '4px solid #3B82F6';
-
-    return '4px solid rgba(59, 224, 246, 0.72)';
-  };
-
-  const avatar = avatarMap[equippedAvatar] ?? avatarMap['avatar-sunny'];
+  const avatar = getAvatarVisual(equippedAvatar);
+  const frame = getFrameVisual(equippedFrame);
 
   return (
     <aside style={sidebarStyle}>
@@ -218,7 +205,7 @@ export function Sidebar({
       </div>
 
       <div style={userCardStyle}>
-        <div style={avatarStyle(getFrameStyle(), avatar.background)}>
+        <div style={avatarStyle(frame.border, avatar.background)}>
           {avatar.emoji}
         </div>
 

@@ -14,6 +14,15 @@ import {
   getMockUser,
   type ShopItemType
 } from '../mock/mockDatabase';
+import {
+  SHOP_ITEMS,
+  getAvatarVisual,
+  getBuddyVisual,
+  getFrameVisual,
+  getThemeVisual,
+  normalizeShopItemId,
+  type ShopItem
+} from '../mock/shopItems';
 
 interface ShopViewProps {
   username: string;
@@ -21,21 +30,6 @@ interface ShopViewProps {
   onThemeChange?: () => void;
 }
 
-interface ShopItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  type: ShopItemType;
-  emoji: string;
-  color: string;
-}
-const themeMapping: Record<string, { main: string; background: string }> = {
-  'default': { main: '#0A2E6E', background: '#F8FAFC' },
-  'ocean-theme': { main: '#075985', background: '#F0F9FF' },
-  'sunset-theme': { main: '#9D174D', background: '#FFF7ED' },
-  'nature-theme': { main: '#065F46', background: '#F0FDF4' },
-};
 export function ShopView({ username, onThemeChange }: ShopViewProps) {
   const [userData, setUserData] = useState(() => getMockUser(username, 'child'));
   const [selectedCategory, setSelectedCategory] = useState<ShopItemType | 'all'>('all');
@@ -43,155 +37,20 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
   const stars = userData?.careCoins ?? 240;
   const ownedItems = userData?.ownedItems ?? [];
 
-  const equippedAvatar = userData?.equippedAvatar ?? 'avatar-sunny';
-  const equippedBuddy = userData?.equippedBuddy ?? 'blue-buddy';
-  const equippedTheme = userData?.equippedTheme ?? 'default';
-  const equippedFrame = userData?.equippedFrame ?? 'none';
-  const shopItems: ShopItem[] = [
-    {
-      id: 'avatar-sunny',
-      name: 'Sunny Avatar',
-      description: 'A friendly default avatar for everyday learning.',
-      price: 0,
-      type: 'avatar',
-      emoji: '😊',
-      color: '#FEF3C7'
-    },
-    {
-      id: 'avatar-artist',
-      name: 'Artist Avatar',
-      description: 'Perfect for drawing, design and creative activities.',
-      price: 90,
-      type: 'avatar',
-      emoji: '🎨',
-      color: '#FCE7F3'
-    },
-    {
-      id: 'avatar-robot',
-      name: 'Robot Avatar',
-      description: 'A tech-style avatar for coding and problem-solving quests.',
-      price: 120,
-      type: 'avatar',
-      emoji: '🤖',
-      color: '#EDE9FE'
-    },
-    {
-      id: 'avatar-space',
-      name: 'Space Avatar',
-      description: 'For explorers, builders and big ideas.',
-      price: 130,
-      type: 'avatar',
-      emoji: '🚀',
-      color: '#DBEAFE'
-    },
+  const equippedAvatar = normalizeShopItemId(userData?.equippedAvatar) ?? 'avatar-sunny';
+  const equippedBuddy = normalizeShopItemId(userData?.equippedBuddy) ?? 'blue-buddy';
+  const equippedTheme = normalizeShopItemId(userData?.equippedTheme) ?? 'default';
+  const equippedFrame = normalizeShopItemId(userData?.equippedFrame) ?? 'none';
 
-    {
-      id: 'blue-buddy',
-      name: 'Blue Buddy',
-      description: 'A calm helper friend for your dashboard.',
-      price: 0,
-      type: 'buddy',
-      emoji: '💙',
-      color: '#DBEAFE'
-    },
-    {
-      id: 'star-buddy',
-      name: 'Star Buddy',
-      description: 'A cheerful buddy that celebrates your progress.',
-      price: 80,
-      type: 'buddy',
-      emoji: '⭐',
-      color: '#FEF3C7'
-    },
-    {
-      id: 'robot-buddy',
-      name: 'Robot Buddy',
-      description: 'A tiny tech friend for problem-solving.',
-      price: 120,
-      type: 'buddy',
-      emoji: '🤖',
-      color: '#EDE9FE'
-    },
-
-    {
-      id: 'none',
-      name: 'No Frame',
-      description: 'Clean avatar without decoration.',
-      price: 0,
-      type: 'frame',
-      emoji: '⚪',
-      color: '#F8FAFC'
-    },
-    {
-      id: 'rainbow-frame',
-      name: 'Rainbow Frame',
-      description: 'A colorful frame for creative days.',
-      price: 100,
-      type: 'frame',
-      emoji: '🌈',
-      color: '#FCE7F3'
-    },
-    {
-      id: 'gold-frame',
-      name: 'Gold Frame',
-      description: 'A shiny frame for top achievements.',
-      price: 150,
-      type: 'frame',
-      emoji: '🏆',
-      color: '#FEF3C7'
-    },
-    {
-      id: 'heart-frame',
-      name: 'Heart Frame',
-      description: 'A soft frame with kindness vibes.',
-      price: 130,
-      type: 'frame',
-      emoji: '💗',
-      color: '#FCE7F3'
-    },
-
-    {
-      id: 'default',
-      name: 'Default Theme',
-      description: 'Original CareQuest colors.',
-      price: 0,
-      type: 'theme',
-      emoji: '✨',
-      color: '#F0FDFA'
-    },
-    {
-      id: 'ocean-theme',
-      name: 'Ocean Theme',
-      description: 'Soft blue colors inspired by calm water.',
-      price: 100,
-      type: 'theme',
-      emoji: '🌊',
-      color: '#E0F2FE'
-    },
-    {
-      id: 'sunset-theme',
-      name: 'Sunset Theme',
-      description: 'Warm and cozy pastel colors.',
-      price: 100,
-      type: 'theme',
-      emoji: '🌅',
-      color: '#FFEDD5'
-    },
-    {
-      id: 'nature-theme',
-      name: 'Nature Theme',
-      description: 'Fresh green accents and a calm nature look.',
-      price: 100,
-      type: 'theme',
-      emoji: '🌿',
-      color: '#DCFCE7'
-    }
-  ];
+  const currentAvatar = getAvatarVisual(equippedAvatar);
+  const currentBuddy = getBuddyVisual(equippedBuddy);
+  const currentTheme = getThemeVisual(equippedTheme);
+  const currentFrame = getFrameVisual(equippedFrame);
 
   const filteredItems =
     selectedCategory === 'all'
-      ? shopItems
-      : shopItems.filter((item) => item.type === selectedCategory);
+      ? SHOP_ITEMS
+      : SHOP_ITEMS.filter((item) => item.type === selectedCategory);
 
   const isOwned = (item: ShopItem) => {
     return item.price === 0 || ownedItems.includes(item.id);
@@ -206,32 +65,36 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
   };
 
   const handleItemClick = (item: ShopItem) => {
-  let updatedData;
+    if (!isOwned(item)) {
+      const updatedAfterBuy = buyShopItem(username, item.id, item.price);
+      setUserData(updatedAfterBuy);
 
-  if (!isOwned(item)) {
-    // 1. Kupowanie
-    const updatedAfterBuy = buyShopItem(username, item.id, item.price);
-    
-    // 2. Jeśli kupno się udało (lub było darmowe), od razu zakładamy
       if ((updatedAfterBuy.ownedItems ?? []).includes(item.id)) {
-        updatedData = equipShopItem(username, {
+        const updatedAfterEquip = equipShopItem(username, {
           id: item.id,
           type: item.type
-       });
-     } else {
-        updatedData = updatedAfterBuy;
-     }
-    } else {
-     // 3. Zakładanie przedmiotu, który już mamy
-     updatedData = equipShopItem(username, {
-       id: item.id,
-       type: item.type
-     });
+        });
+
+        setUserData(updatedAfterEquip);
+
+        if (item.type === 'theme') {
+          onThemeChange?.();
+        }
+      }
+
+      return;
     }
 
-    setUserData(updatedData);
-    // Ten props wysyła sygnał do App.tsx, żeby odświeżył Buddy'ego
-    onThemeChange?.(); 
+    const updatedAfterEquip = equipShopItem(username, {
+      id: item.id,
+      type: item.type
+    });
+
+    setUserData(updatedAfterEquip);
+
+    if (item.type === 'theme') {
+      onThemeChange?.();
+    }
   };
 
   const getCategoryIcon = (type: ShopItemType | 'all') => {
@@ -242,42 +105,12 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
     return <ShoppingBag size={18} />;
   };
 
-  const getFrameStyle = () => {
-    if (equippedFrame === 'rainbow-frame') {
-      return '5px solid #FF6B9D';
-    }
-
-    if (equippedFrame === 'gold-frame') {
-      return '5px solid #F59E0B';
-    }
-
-    if (equippedFrame === 'heart-frame') {
-      return '5px solid #EC4899';
-    }
-
-    return '5px solid #E2E8F0';
+  const getItemPreviewBorder = (item: ShopItem) => {
+    if (item.type === 'avatar') return '4px solid #E2E8F0';
+    if (item.type === 'frame') return getFrameVisual(item.id).border;
+    return 'none';
   };
 
-  const getThemeBackground = () => {
-    if (equippedTheme === 'ocean-theme') {
-      return 'linear-gradient(135deg, #E0F7FA 0%, #DBEAFE 45%, #F0FDFA 100%)';
-    }
-
-    if (equippedTheme === 'sunset-theme') {
-      return 'linear-gradient(135deg, #FFF7ED 0%, #FFE4E6 50%, #FEF3C7 100%)';
-    }
-
-    if (equippedTheme === 'nature-theme') {
-      return 'linear-gradient(135deg, #ECFDF5 0%, #DCFCE7 50%, #F0FDFA 100%)';
-    }
-
-    return 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)';
-  };
-
-  const currentAvatar = shopItems.find((item) => item.id === equippedAvatar);
-  const currentBuddy = shopItems.find((item) => item.id === equippedBuddy);
-  const currentTheme = shopItems.find((item) => item.id === equippedTheme);
-  const currentFrame = shopItems.find((item) => item.id === equippedFrame);
   return (
     <div
       style={{
@@ -411,7 +244,7 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
 
           <div
             style={{
-              background: getThemeBackground(),
+              background: currentTheme.background,
               borderRadius: '20px',
               padding: '18px',
               border: '1px solid #E2E8F0',
@@ -425,8 +258,8 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                 width: '78px',
                 height: '78px',
                 borderRadius: '50%',
-                border: getFrameStyle(),
-                background: currentAvatar?.color ?? '#FEF3C7',
+                border: currentFrame.border,
+                background: currentAvatar.background,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -436,7 +269,7 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                 transition: 'all 0.3s ease'
               }}
             >
-              {currentAvatar?.emoji ?? '😊'}
+              {currentAvatar.emoji}
             </div>
 
             <div>
@@ -451,44 +284,20 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                 Equipped look
               </p>
 
-              <p
-                style={{
-                  margin: '5px 0 0',
-                  fontSize: '14px',
-                  color: '#1E293B'
-                }}
-              >
-                Avatar: <strong>{currentAvatar?.name ?? equippedAvatar}</strong>
+              <p style={equippedLineStyle}>
+                Avatar: <strong>{currentAvatar.title}</strong>
               </p>
 
-              <p
-                style={{
-                  margin: '5px 0 0',
-                  fontSize: '14px',
-                  color: '#1E293B'
-                }}
-              >
-                Frame: <strong>{currentFrame?.name ?? equippedFrame}</strong>
+              <p style={equippedLineStyle}>
+                Frame: <strong>{currentFrame.title}</strong>
               </p>
 
-              <p
-                style={{
-                  margin: '5px 0 0',
-                  fontSize: '14px',
-                  color: '#1E293B'
-                }}
-              >
-                Buddy: <strong>{currentBuddy?.name ?? equippedBuddy}</strong>
+              <p style={equippedLineStyle}>
+                Buddy: <strong>{currentBuddy.title}</strong>
               </p>
 
-              <p
-                style={{
-                  margin: '5px 0 0',
-                  fontSize: '14px',
-                  color: '#1E293B'
-                }}
-              >
-                Theme: <strong>{currentTheme?.name ?? equippedTheme}</strong>
+              <p style={equippedLineStyle}>
+                Theme: <strong>{currentTheme.title}</strong>
               </p>
             </div>
           </div>
@@ -592,16 +401,17 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                   width: '86px',
                   height: '86px',
                   borderRadius: item.type === 'avatar' ? '50%' : '24px',
-                  border: item.type === 'avatar' ? '4px solid #E2E8F0' : 'none',
+                  border: getItemPreviewBorder(item),
                   background: item.color,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '44px',
-                  marginBottom: '18px'
+                  marginBottom: '18px',
+                  boxSizing: 'border-box'
                 }}
               >
-                {item.emoji}
+                {item.icon}
               </div>
 
               <p
@@ -628,7 +438,7 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
                   margin: '0 0 8px'
                 }}
               >
-                {item.name}
+                {item.title}
               </h3>
 
               <p
@@ -702,3 +512,9 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
     </div>
   );
 }
+
+const equippedLineStyle = {
+  margin: '5px 0 0',
+  fontSize: '14px',
+  color: '#1E293B'
+};
